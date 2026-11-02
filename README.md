@@ -29,3 +29,10 @@ The parser also rejects unpadded fields (e.g. `2020:1:2 ...`) and non-4-digit ye
 ## Scope decisions
 
 Standard library only, no dependencies. Sub-second EXIF (the `SubSecTime` tags), timezone offsets, and XMP's ISO 8601 form are intentionally out of scope. Use a different tool for those — this one will raise `ExifTimeError` rather than drop precision.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
